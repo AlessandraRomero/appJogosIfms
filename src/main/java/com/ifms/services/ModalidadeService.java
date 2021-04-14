@@ -6,12 +6,15 @@ import java.util.stream.Collectors;
 
 import javax.persistence.EntityNotFoundException;
 
+import org.springframework.dao.DataIntegrityViolationException;
+import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.ifms.dto.ModalidadeDTO;
 import com.ifms.entities.Modalidade;
 import com.ifms.repositories.ModalidadeRepository;
+import com.ifms.services.exceptions.DataBaseException;
 import com.ifms.services.exceptions.ResourceNotFoundException;
 
 @Service
@@ -49,6 +52,15 @@ public class ModalidadeService {
 			return new ModalidadeDTO(entity);
 		}catch (EntityNotFoundException e) {
 			throw new ResourceNotFoundException("O id da modalidade não foi localizado");
+		}
+	}
+	public void delete(long id) {
+		try {
+		repository.deleteById(id);	
+		} catch (EmptyResultDataAccessException e) {
+			throw new ResourceNotFoundException("O id da modalidade não foi localizado");
+		} catch (DataIntegrityViolationException e) {
+			throw new DataBaseException("Não foi possível deletar a modalidade");
 		}
 	}
 		
