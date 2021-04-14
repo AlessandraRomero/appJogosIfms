@@ -22,5 +22,10 @@ public class ModalidadeService {
 		return list.stream().map(modalidade -> new ModalidadeDTO(modalidade))
 				.collect(Collectors.toList());
 	}
+	@Transactional(readOnly = true)
+	public ModalidadeDTO findById(Long id) {
+		
+		return null;
+	}
 	
 }
