@@ -4,6 +4,8 @@ import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
+import javax.persistence.EntityNotFoundException;
+
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -31,4 +33,23 @@ public class ModalidadeService {
 		return new ModalidadeDTO(modalidade);
 	}
 	
+	@Transactional
+	public ModalidadeDTO insert(ModalidadeDTO dto) {
+	    Modalidade entity = new Modalidade();
+	    entity.setDescricao(dto.getDescricao());
+	    entity = repository.save(entity);
+		return new ModalidadeDTO(entity);
+	}
+	@Transactional
+	public ModalidadeDTO update(Long id, ModalidadeDTO dto) {
+		try {
+			Modalidade entity = repository.getOne(id);
+		    entity.setDescricao(dto.getDescricao());
+		    entity = repository.save(entity);
+			return new ModalidadeDTO(entity);
+		}catch (EntityNotFoundException e) {
+			throw new ResourceNotFoundException("O id da modalidade não foi localizado");
+		}
+	}
+		
 }
